@@ -13,13 +13,9 @@ def index():
 def translate():
     text_to_translate = request.form['text']
     try:
-        # Traduire le texte en coréen
         translation = translator.translate(text_to_translate, src='fr', dest='ko')
 
-        # Analyser la grammaire avec une API externe (exemple : LanguageTool)
         grammar_analysis = analyze_grammar(translation.text)
-
-        # Construire une réponse avec explications
         response = {
             'original_text': text_to_translate,
             'translated_text': translation.text,

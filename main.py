@@ -41,7 +41,31 @@ def translate():
 
     return jsonify(response)
 
+def generate_phonetic(hangul_text):
+    """
+    Génère une transcription phonétique approximative du texte hangeul.
+    """
+    # mapping des caractères hangeul aux sons latins
+    phonetic_map = {
+        'ㄱ': 'g/k', 'ㄴ': 'n', 'ㄷ': 'd/t', 'ㄹ': 'r/l',
+        'ㅁ': 'm', 'ㅂ': 'b/p', 'ㅅ': 's', 'ㅇ': '', 
+        'ㅈ': 'j', 'ㅊ': 'ch', 'ㅋ': 'k', 'ㅌ': 't',
+        'ㅍ': 'p', 'ㅎ': 'h',
+        'ㅏ': 'a', 'ㅑ': 'ya', 'ㅓ': 'eo', 'ㅕ': 'yeo',
+        'ㅗ': 'o', 'ㅛ': 'yo', 'ㅜ': 'u', 'ㅠ': 'yu',
+        'ㅡ': 'eu', 'ㅣ': 'i'
+    }
+
+    phonetic_transcription = ""
+    for char in hangul_text:
+        phonetic_transcription += phonetic_map.get(char, char)
+
+    return phonetic_transcription
+
 def analyze_grammar(text):
+    """
+    Appelle l'API LanguageTool pour analyser la grammaire.
+    """
     api_url = "https://api.languagetool.org/v2/check"
     params = {
         'text': text,

@@ -20,14 +20,18 @@ def translate():
         # Traduction avec Google Translator
         translation = translator.translate(text_to_translate, src='fr', dest='ko')
 
+        # Extraction des informations
+        translated_text = translation.text
+        pronunciation = translation.pronunciation or generate_phonetic(translated_text)
+
         # Analyse grammaticale (optionnelle)
-        grammar_analysis = analyze_grammar(translation.text)
+        grammar_analysis = analyze_grammar(translated_text)
 
         # Construction de la réponse JSON
         response = {
             'original_text': text_to_translate,
-            'translated_text': translation.text,
-            'pronunciation': translation.pronunciation or "Non disponible",
+            'translated_text': translated_text,
+            'pronunciation': pronunciation,
             'source_language': translation.src,
             'target_language': 'coréen',
             'grammar_analysis': grammar_analysis

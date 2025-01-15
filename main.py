@@ -2,7 +2,6 @@ from flask import Flask, request, render_template, jsonify
 from googletrans import Translator
 import requests
 
-# Initialisation de l'application Flask
 app = Flask(__name__)
 translator = Translator()
 

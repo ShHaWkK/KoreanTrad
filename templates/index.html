@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Traduction Coréenne</title>
+    <title>Traducteur Français → Coréen</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,9 +61,7 @@
             try {
                 const response = await fetch('/translate', {
                     method: 'POST',
-                    headers: { 
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({ text })
                 });
 
@@ -75,12 +73,7 @@
                     document.querySelector('#result').innerHTML = `
                         <strong>Texte original :</strong> ${result.original_text}<br>
                         <strong>Texte traduit :</strong> ${result.translated_text}<br>
-                        <strong>Prononciation :</strong> ${result.pronunciation}<br>
-                        <strong>Analyse grammaticale :</strong> ${
-                            result.grammar_analysis && result.grammar_analysis.length > 0 
-                                ? JSON.stringify(result.grammar_analysis, null, 2) 
-                                : "Aucune erreur détectée"
-                        }
+                        <strong>Prononciation :</strong> ${result.pronunciation}
                     `;
                 }
             } catch (error) {

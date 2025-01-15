@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, jsonify
 from googletrans import Translator
 import requests
 
+# Initialisation de l'application Flask
 app = Flask(__name__)
 translator = Translator()
 
@@ -11,23 +12,29 @@ def index():
 
 @app.route('/translate', methods=['POST'])
 def translate():
-    text_to_translate = request.form['text']
+    # Récupération du texte envoyé par le formulaire
+    text_to_translate = request.form.get('text', '').strip()
+    if not text_to_translate:
+        return jsonify({'error': "Le texte à traduire est vide."}), 400
+
     try:
+        # Traduction avec Google Translator
         translation = translator.translate(text_to_translate, src='fr', dest='ko')
 
+        # Analyse grammaticale (optionnelle)
         grammar_analysis = analyze_grammar(translation.text)
+
+        # Construction de la réponse JSON
         response = {
             'original_text': text_to_translate,
             'translated_text': translation.text,
-            'pronunciation': translation.pronunciation,
+            'pronunciation': translation.pronunciation or "Non disponible",
             'source_language': translation.src,
             'target_language': 'coréen',
             'grammar_analysis': grammar_analysis
         }
     except Exception as e:
-        response = {
-            'error': str(e)
-        }
+        response = {'error': f"Une erreur s'est produite : {str(e)}"}
 
     return jsonify(response)
 

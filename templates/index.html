@@ -30,14 +30,61 @@
         button:hover {
             background-color: #0056b3;
         }
+        #result {
+            margin-top: 20px;
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <h1>Traducteur Français → Coréen</h1>
-    <form action="/translate" method="post">
+    <form id="translateForm">
         <label for="text">Entrez du texte :</label><br>
         <textarea id="text" name="text" rows="4" cols="50"></textarea><br><br>
         <button type="submit">Traduire</button>
     </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.querySelector('#translateForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const text = document.querySelector('#text').value.trim();
+            if (!text) {
+                alert("Veuillez entrer du texte à traduire.");
+                return;
+            }
+
+            try {
+                const response = await fetch('/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ text })
+                });
+
+                const result = await response.json();
+
+                if (result.error) {
+                    document.querySelector('#result').innerText = `Erreur : ${result.error}`;
+                } else {
+                    document.querySelector('#result').innerHTML = `
+                        <strong>Texte original :</strong> ${result.original_text}<br>
+                        <strong>Texte traduit :</strong> ${result.translated_text}<br>
+                        <strong>Prononciation :</strong> ${result.pronunciation}<br>
+                        <strong>Analyse grammaticale :</strong> ${
+                            result.grammar_analysis && result.grammar_analysis.length > 0 
+                                ? JSON.stringify(result.grammar_analysis, null, 2) 
+                                : "Aucune erreur détectée"
+                        }
+                    `;
+                }
+            } catch (error) {
+                document.querySelector('#result').innerText = `Erreur lors de la requête : ${error.message}`;
+            }
+        });
+    </script>
 </body>
 </html>
